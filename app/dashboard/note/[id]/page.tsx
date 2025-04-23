@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useNotes } from '@/lib/hooks/use-notes';
 import { Button } from '@/components/ui/button';
@@ -34,9 +34,17 @@ export default function NotePage({ params }: { params: { id: string } }) {
   const { data: note, isLoading, isError } = useNote(id);
   const router = useRouter();
   
-  const [title, setTitle] = useState(note?.title || '');
-  const [content, setContent] = useState(note?.content || '');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+
+  // Only run this when the note loads
+  useEffect(() => {
+    if (note) {
+      setTitle(note.title);
+      setContent(note.content);
+    }
+  }, [note]);
   
   if (isLoading) {
     return <div className="container py-10">Loading note...</div>;
@@ -73,15 +81,6 @@ export default function NotePage({ params }: { params: { id: string } }) {
       content: note.content,
     });
   };
-  
-  // Update local state when note is loaded
-  if (note && title !== note.title) {
-    setTitle(note.title);
-  }
-  
-  if (note && content !== note.content) {
-    setContent(note.content);
-  }
   
   return (
     <div className="container py-6 md:py-10">
