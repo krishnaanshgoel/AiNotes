@@ -14,7 +14,7 @@ export function LogoutButton() {
     router.push('/');
     localStorage.clear();
     sessionStorage.clear();
-    // router.refresh();
+    router.refresh();
   };
 
   return (
